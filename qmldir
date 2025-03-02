@@ -1,0 +1,5 @@
+singleton MaterialIconsFont MaterialIconsFont.qml
+singleton RobotoFont RobotoFont.qml
+singleton RobotoMonoFont RobotoMonoFont.qml
+singleton Style Style.qml
+singleton WindowsHelper WindowsHelper.qml

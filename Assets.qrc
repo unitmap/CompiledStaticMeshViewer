@@ -1,0 +1,30 @@
+<RCC>
+    <qresource prefix="/">
+        <file>Assets/Background.png</file>
+        <file>Main.qml</file>
+        <file>qmldir</file>
+        <file>Button.qml</file>
+        <file>Frame.qml</file>
+        <file>Assets/MaterialIcons-Regular.ttf</file>
+        <file>Material.qml</file>
+        <file>Texture.qml</file>
+        <file>Label.qml</file>
+        <file>MaterialIconsFont.qml</file>
+        <file>Assets/RobotoMono-Regular.ttf</file>
+        <file>RobotoFont.qml</file>
+        <file>Style.qml</file>
+        <file>LineEdit.qml</file>
+        <file>ScrollBar.qml</file>
+        <file>ContextMenu.qml</file>
+        <file>Assets/Noise.png</file>
+        <file>Assets/Roboto-Regular.ttf</file>
+        <file>RobotoMonoFont.qml</file>
+        <file>MaterialComponent.qml</file>
+        <file>WindowsHelper.qml</file>
+        <file>NoiseLayer.qml</file>
+        <file>Model.qml</file>
+        <file>Assets/DarkShadow.png</file>
+        <file>ConfigurationsDialog.qml</file>
+        <file>Icon/Icon.ico</file>
+    </qresource>
+</RCC>
