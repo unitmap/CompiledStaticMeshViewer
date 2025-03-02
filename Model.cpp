@@ -1,6 +1,5 @@
 #include "Model.h"
 
-
 Model::Model(QObject *parent) :
     QObject(parent),
     m_compiledStaticMesh(nullptr)
@@ -133,23 +132,23 @@ void Model::release()
 void Model::build()
 {
     m_modelGeometry.addAttribute(QQuick3DGeometry::Attribute::PositionSemantic,
-                                 sizeof(float) * 0, QQuick3DGeometry::Attribute::F32Type);
+        sizeof(float) * 0, QQuick3DGeometry::Attribute::F32Type);
     m_modelGeometry.addAttribute(QQuick3DGeometry::Attribute::TexCoordSemantic,
-                                 sizeof(float) * 3, QQuick3DGeometry::Attribute::F32Type);
+        sizeof(float) * 3, QQuick3DGeometry::Attribute::F32Type);
     m_modelGeometry.addAttribute(QQuick3DGeometry::Attribute::NormalSemantic,
-                                 sizeof(float) * 5, QQuick3DGeometry::Attribute::F32Type);
+        sizeof(float) * 5, QQuick3DGeometry::Attribute::F32Type);
     m_modelGeometry.setPrimitiveType(QQuick3DGeometry::PrimitiveType::Triangles);
     m_modelGeometry.setStride(sizeof(float) * 8);
     m_modelGeometry.update();
 
     m_normalGeometry.addAttribute(QQuick3DGeometry::Attribute::PositionSemantic,
-                                  sizeof(float) * 0, QQuick3DGeometry::Attribute::F32Type);
+        sizeof(float) * 0, QQuick3DGeometry::Attribute::F32Type);
     m_normalGeometry.setPrimitiveType(QQuick3DGeometry::PrimitiveType::Lines);
     m_normalGeometry.setStride(sizeof(float) * 3);
     m_normalGeometry.update();
 
     m_gridGeometry.addAttribute(QQuick3DGeometry::Attribute::PositionSemantic,
-                                sizeof(float) * 0, QQuick3DGeometry::Attribute::F32Type);
+        sizeof(float) * 0, QQuick3DGeometry::Attribute::F32Type);
     m_gridGeometry.setPrimitiveType(QQuick3DGeometry::PrimitiveType::Lines);
     m_gridGeometry.setStride(sizeof(float) * 3);
     m_gridGeometry.update();
@@ -163,8 +162,8 @@ bool Model::loadCompiledStaticMesh(const QUrl &filename)
     release();
 
     /*
-            Load file
-        */
+        Load file
+    */
     m_filename = filename.toLocalFile();
     m_path = QFileInfo(m_filename).dir().path() + QDir::separator();
     m_materialDirectories.append(m_path);
@@ -183,18 +182,18 @@ bool Model::loadCompiledStaticMesh(const QUrl &filename)
     }
 
     if (!m_compiledStaticMesh->open(filename.toLocalFile().toStdString(),
-                                    CompiledStaticMesh::Interface::Read)) {
+        CompiledStaticMesh::Interface::Read)) {
         return false;
     }
 
     if (m_compiledStaticMesh->vertexCount() == 0 ||
-            m_compiledStaticMesh->faceCount() == 0) {
+        m_compiledStaticMesh->faceCount() == 0) {
         return false;
     }
 
     /*
-            Read materials
-        */
+        Read materials
+    */
     std::vector<std::string> materialNames;
     if (!m_compiledStaticMesh->readMaterials(&materialNames)) {
         return false;
@@ -214,8 +213,8 @@ bool Model::loadCompiledStaticMesh(const QUrl &filename)
     }
 
     /*
-            Allocate vertex data
-        */
+        Allocate vertex data
+    */
     uint32_t geometryVertexCount = m_compiledStaticMesh->faceCount() * 3;
 
     QByteArray modelGeometryData;
@@ -231,8 +230,8 @@ bool Model::loadCompiledStaticMesh(const QUrl &filename)
     Vector3 *gridGeometryVertices = reinterpret_cast<Vector3 *>(gridGeometryData.data());
 
     /*
-            Read faces
-        */
+        Read faces
+    */
     QVector<uint8_t> faces;
     faces.resize(m_compiledStaticMesh->faceCount() * m_compiledStaticMesh->faceSize());
 
@@ -241,8 +240,8 @@ bool Model::loadCompiledStaticMesh(const QUrl &filename)
     }
 
     /*
-            Read vertices
-        */
+        Read vertices
+    */
     QVector<uint8_t> vertices;
     vertices.resize(m_compiledStaticMesh->vertexCount() * m_compiledStaticMesh->vertexSize());
 
@@ -252,16 +251,16 @@ bool Model::loadCompiledStaticMesh(const QUrl &filename)
 
     /*
             Parse faces
-        */
+    */
     uint32_t meshCount = static_cast<uint32_t>(m_materials.size());
     if (meshCount < 1) {
         meshCount = 1;
     }
 
     m_boundingBox.min = QVector3D(std::numeric_limits<float>::max(),
-                                  std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
+        std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
     m_boundingBox.max = QVector3D(std::numeric_limits<float>::min(),
-                                  std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
+        std::numeric_limits<float>::min(), std::numeric_limits<float>::min());
 
     uint32_t meshOffset = 0;
     uint32_t meshSize;
@@ -279,31 +278,31 @@ bool Model::loadCompiledStaticMesh(const QUrl &filename)
 
             for (uint32_t k = 0; k < 3; k++) {
                 /*
-                        Model geometry
-                    */
+                    Model geometry
+                */
                 m_compiledStaticMesh->vertex(faces.data(), j, vertices.data(), k,
-                                             modelGeometryVertices->position.data, modelGeometryVertices->textureCoord.data,
-                                             modelGeometryVertices->normal.data);
+                    modelGeometryVertices->position.data, modelGeometryVertices->textureCoord.data,
+                    modelGeometryVertices->normal.data);
 
                 /*
-                        Normal geometry
-                    */
+                    Normal geometry
+                */
                 normalGeometryVertices->x = modelGeometryVertices->position.x;
                 normalGeometryVertices->y = modelGeometryVertices->position.y;
                 normalGeometryVertices->z = modelGeometryVertices->position.z;
                 normalGeometryVertices++;
 
                 normalGeometryVertices->x = modelGeometryVertices->position.x +
-                        modelGeometryVertices->normal.x * Model::NormalGeometryOffset;
+                    modelGeometryVertices->normal.x * Model::NormalGeometryOffset;
                 normalGeometryVertices->y = modelGeometryVertices->position.y +
-                        modelGeometryVertices->normal.y * Model::NormalGeometryOffset;
+                    modelGeometryVertices->normal.y * Model::NormalGeometryOffset;
                 normalGeometryVertices->z = modelGeometryVertices->position.z +
-                        modelGeometryVertices->normal.z * Model::NormalGeometryOffset;
+                    modelGeometryVertices->normal.z * Model::NormalGeometryOffset;
                 normalGeometryVertices++;
 
                 /*
-                        Bounding box
-                    */
+                    Bounding box
+                */
                 if (m_boundingBox.min.x() > modelGeometryVertices->position.x) {
                     m_boundingBox.min.setX(modelGeometryVertices->position.x);
                 }
@@ -333,8 +332,8 @@ bool Model::loadCompiledStaticMesh(const QUrl &filename)
             }
 
             /*
-                    Grid geometry
-                */
+                Grid geometry
+            */
             for (uint32_t k = 0; k < 3; k++) {
                 const Vertex *gridVertex[2];
 
@@ -355,19 +354,19 @@ bool Model::loadCompiledStaticMesh(const QUrl &filename)
                 }
 
                 gridGeometryVertices->x = gridVertex[0]->position.x +
-                        gridVertex[0]->normal.x * Model::GridGeometryOffset;
+                    gridVertex[0]->normal.x * Model::GridGeometryOffset;
                 gridGeometryVertices->y = gridVertex[0]->position.y +
-                        gridVertex[0]->normal.y * Model::GridGeometryOffset;
+                    gridVertex[0]->normal.y * Model::GridGeometryOffset;
                 gridGeometryVertices->z = gridVertex[0]->position.z +
-                        gridVertex[0]->normal.z * Model::GridGeometryOffset;
+                    gridVertex[0]->normal.z * Model::GridGeometryOffset;
                 gridGeometryVertices++;
 
                 gridGeometryVertices->x = gridVertex[1]->position.x +
-                        gridVertex[1]->normal.x * Model::GridGeometryOffset;
+                    gridVertex[1]->normal.x * Model::GridGeometryOffset;
                 gridGeometryVertices->y = gridVertex[1]->position.y +
-                        gridVertex[1]->normal.y * Model::GridGeometryOffset;
+                    gridVertex[1]->normal.y * Model::GridGeometryOffset;
                 gridGeometryVertices->z = gridVertex[1]->position.z +
-                        gridVertex[1]->normal.z * Model::GridGeometryOffset;
+                    gridVertex[1]->normal.z * Model::GridGeometryOffset;
                 gridGeometryVertices++;
             }
         }
